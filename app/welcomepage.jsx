@@ -31,12 +31,12 @@ const WelcomeScreen = () => {
 
         {/* Title */}
         <Text className="text-3xl font-bold text-gray-800 text-center mb-3">
-          Lorem ipsum{'\n'}dolor.
+          Chatbot App{'\n'}Dashboard
         </Text>
 
         {/* Subtitle */}
         <Text className="text-gray-500 text-center mb-10 leading-6 px-2 text-base">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+          A Chatbot, a helpful and versatile AI created by Robin using Open AI api get response in real time.
         </Text>
 
         {/* Buttons Container */}
