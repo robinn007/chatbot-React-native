@@ -8,10 +8,21 @@
 import { Stack } from "expo-router";
 import "./globals.css";
 import { StatusBar } from "react-native";
+import { ClerkProvider } from '@clerk/clerk-expo'
+import { tokenCache } from '@clerk/clerk-expo/token-cache'
+
+
+const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
 export default function RootLayout() {
+  if (!publishableKey) {
+    throw new Error(
+      "Missing Publishable Key. Please set EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY in your .env"
+    );
+  }
   return (
     <>
+    <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
      <StatusBar hidden={true} />
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
@@ -20,6 +31,7 @@ export default function RootLayout() {
       <Stack.Screen name="signup" options={{ headerShown: false }} />
       <Stack.Screen name="chathome" options={{ headerShown: false }} />
     </Stack>
+    </ClerkProvider>
     </>
   );
 }

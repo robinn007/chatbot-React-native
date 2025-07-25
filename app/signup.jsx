@@ -13,8 +13,13 @@ import { Ionicons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
 import Toast from "react-native-toast-message";
 //import AntDesign from "@expo/vector-icons/AntDesign";
+import { useSSO } from "@clerk/clerk-expo";
+import { useRouter } from "expo-router";
 
 const SignupScreen = () => {
+      const { startSSOFlow } = useSSO();
+    const router = useRouter();
+
   const [signupInfo, setSignupInfo] = useState({
     name: "",
     email: "",
@@ -127,6 +132,19 @@ const SignupScreen = () => {
         onShow: () => {},
         onHide: () => {},
       });
+    }
+  };
+
+   const handleGoogleSignIn = async () => {
+    try {
+      const { createdSessionId, setActive } = await startSSOFlow({ strategy: "oauth_google" });
+
+      if (setActive && createdSessionId) {
+        setActive({ session: createdSessionId });
+        router.replace("/chathome");
+      }
+    } catch (error) {
+      console.error("OAuth error:", error);
     }
   };
 
@@ -271,7 +289,7 @@ const SignupScreen = () => {
           </View>
 
           {/* Google Sign Up Button */}
-          <TouchableOpacity className="bg-white rounded-2xl py-4 mb-6 shadow-sm border border-gray-100">
+          <TouchableOpacity className="bg-white rounded-2xl py-4 mb-6 shadow-sm border border-gray-100" onPress={handleGoogleSignIn}>
             <View className="flex-row items-center justify-center">
               {/* <Text className="text-gray-700 font-semibold text-base ">
                 <AntDesign name="google" size={24} color="black" className="" />

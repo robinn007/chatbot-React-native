@@ -13,9 +13,15 @@ import { Ionicons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSSO } from "@clerk/clerk-expo";
+import { useRouter } from "expo-router";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 
 const LoginPageScreen = () => {
+    const { startSSOFlow } = useSSO();
+  const router = useRouter();
+
   const [loginInfo, setLoginInfo] = useState({
     email: "",
     password: "",
@@ -122,7 +128,21 @@ const LoginPageScreen = () => {
     }
   };
 
+   const handleGoogleSignIn = async () => {
+    try {
+      const { createdSessionId, setActive } = await startSSOFlow({ strategy: "oauth_google" });
+
+      if (setActive && createdSessionId) {
+        setActive({ session: createdSessionId });
+        router.replace("/chathome");
+      }
+    } catch (error) {
+      console.error("OAuth error:", error);
+    }
+  };
+
   return (
+     <SafeAreaProvider>
     <SafeAreaView className="flex-1 bg-gray-50">
       <StatusBar barStyle="dark-content" backgroundColor="#f9fafb" />
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
@@ -222,7 +242,7 @@ const LoginPageScreen = () => {
           </View>
 
           {/* Google Login Button */}
-          <TouchableOpacity className="bg-white rounded-2xl py-4 mb-6 shadow-sm border border-gray-100">
+          <TouchableOpacity className="bg-white rounded-2xl py-4 mb-6 shadow-sm border border-gray-100"  onPress={handleGoogleSignIn}>
             <View className="flex-row items-center justify-center">
               {/* <Text className="text-gray-700 font-semibold text-base">
                 Google
@@ -255,6 +275,7 @@ const LoginPageScreen = () => {
       </ScrollView>
       <Toast />
     </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

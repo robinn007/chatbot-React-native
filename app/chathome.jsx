@@ -29,7 +29,7 @@ const ChatBotHome = () => {
   const scrollViewRef = useRef(null);
 
   // Replace with your actual GitHub openAi token
-  const GITHUBAPI_TOKEN = '';
+  const GITHUBAPI_TOKEN = process.env.GITHUBAPI_TOKEN
 
   // Scroll to bottom when new messages are added
   useEffect(() => {
